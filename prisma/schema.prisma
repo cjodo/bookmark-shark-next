@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+	provider = "prisma-client-js"
+}
+
+datasource db {
+	provider = "postgresql"
+		url      = env("DATABASE_URL")
+}
+
+model User {
+	id 							Int	@id @default(autoincrement())
+		email 				String @unique
+		name 					String? 	@unique
+		passwordHash 	String
+		createdAt 		DateTime @default(now())
+
+		bookmarks 		Bookmark[]
+		starred				Star[]
+}
+
+model Bookmark {
+	id   					Int @id @default(autoincrement())
+		name 				String @unique
+		description String
+		resourceUrl String?
+		userId 			Int
+		createdAt   DateTime @default(now())
+
+		user 				User @relation(fields: [userId], references: [id]) 	
+		urls				BookmarkUrl[]
+		categories	BookmarkCategory[] 
+
+		stars 		Star[]
+}
+
+model Star {
+	userId			Int
+	bookmarkId 	Int
+	createdAt 	DateTime @default(now())
+
+	user  User 				@relation(fields: [userId], references: [id], onDelete: Cascade)
+	bookmark Bookmark @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
+
+	@@id([userId, bookmarkId])
+}
+
+model BookmarkUrl {
+	id    			Int @id @default(autoincrement())
+	bookmarkId 	Int
+	url					String
+
+	bookmark 		Bookmark @relation(fields: [bookmarkId], references: [id])
+
+	@@unique([bookmarkId, url])
+}
+
+model Category {
+	id 						Int @id @default(autoincrement())
+	name 					String @unique
+	description 	String @default("")
+	feature_image String @default("https://placehold.co/600x400")
+	slug 					String @unique 
+
+	bookmarks BookmarkCategory[]
+}
+
+model BookmarkCategory {
+	bookmarkId Int
+	categoryId Int 
+
+	bookmark Bookmark @relation(fields: [bookmarkId], references: [id])
+	category Category @relation(fields: [categoryId], references: [id])
+
+	@@id([bookmarkId, categoryId])
+}
