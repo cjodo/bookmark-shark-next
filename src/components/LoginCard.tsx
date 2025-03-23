@@ -14,7 +14,6 @@ import {
 	FormLabel,
 	Link,
 	Stack,
-	SvgIcon,
 	TextField,
 	Typography
 } from "@mui/material";
@@ -72,17 +71,18 @@ export const LoginCard = () => {
 	const [emailErrorMessage, setEmailErrorMessage] = useState('');
 	const [passwordError, setPasswordError] = useState(false);
 	const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-	const [open, setOpen] = useState(false);
 
 	const router = useRouter();
 
-	const handleClickOpen = () => {
-		setOpen(true);
-	};
-
-	const handleClose = () => {
-		setOpen(false);
-	};
+	//TODO: Forgot password
+	// const [open, setOpen] = useState(false);
+	// const handleClickOpen = () => {
+	// 	setOpen(true);
+	// };
+	//
+	// const handleClose = () => {
+	// 	setOpen(false);
+	// };
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		if (emailError || passwordError) {

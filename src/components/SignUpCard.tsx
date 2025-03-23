@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useActionState } from "react";
@@ -75,32 +75,9 @@ export default function SignUpCard({ action }: SignUpParams) {
 	const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
 	const [usernameError, setUsernameError] = useState(false);
 	const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
-	const [open, setOpen] = useState(false);
-
 	const [state, formAction] = useActionState(action, {message: ""})
 
 	const router = useRouter();
-
-	const handleClickOpen = () => {
-		setOpen(true);
-	};
-
-	const handleClose = () => {
-		setOpen(false);
-	};
-
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		if (emailError || passwordError || usernameError) {
-			event.preventDefault();
-			return;
-		}
-		const data = new FormData(event.currentTarget);
-		console.log({
-			email: data.get('email'),
-			username: data.get('username'),
-			password: data.get('password'),
-		});
-	};
 
 	const validateInputs = () => {
 		const username = document.getElementById('username') as HTMLInputElement;

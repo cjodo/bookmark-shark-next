@@ -7,7 +7,6 @@ import { CardContainer } from "@/components/card/CardContainer"
 import { CategoryCard } from "@/components/card/CategoryCard"
 
 import prisma from "@/lib/prisma"
-import { getCurrentSession } from "@/lib/session"
 
 export default async function Home() {
 	const categories = await prisma.category.findMany({
@@ -29,7 +28,7 @@ export default async function Home() {
 
 						<p className="mb-5 text-lg">
 							Bookmark Shark is a browser bookmark sharing platform, perfect for discovering and sharing entertainment, educational, and professional content.  
-							Easily share, rate, and download others' bookmarks in just one click!
+							Easily share, rate, and download others&apos bookmarks in just one click!
 						</p>
 
 						<div className="mt-6 flex justify-center space-x-4">

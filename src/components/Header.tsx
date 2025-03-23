@@ -1,5 +1,7 @@
-import { getCurrentSession } from "@/lib/session"
+import Link from "next/link";
+import Image from "next/image";
 
+import { getCurrentSession } from "@/lib/session"
 
 export const Header = async () => {
 	const { user } = await getCurrentSession();
@@ -7,14 +9,14 @@ export const Header = async () => {
 	return (
 		<div className="navbar bg-neutral text-base-content">
 			<div className="flex-1">
-				<a className="btn btn-ghost text-xl" href="/">Bookmark Shark</a>
+				<Link className="btn btn-ghost text-xl" href="/">Bookmark Shark</Link>
 			</div>
 
 			{user ?  
 				<div className="dropdown dropdown-end">
 					<div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
 						<div className="w-10 rounded-full">
-							<img
+							<Image
 								alt="Tailwind CSS Navbar component"
 								src="/placeholder-avatar.png" />
 						</div>
@@ -26,17 +28,17 @@ export const Header = async () => {
 							<li><h3>{ user?.username }</h3></li>
 						) }
 						<li>
-							<a className="justify-between"
+							<Link className="justify-between"
 								href={`/profile/${user?.id}`}
 							>
 								Profile
 								<span className="badge">New</span>
-							</a>
+							</Link>
 						</li>
-						<li><a href="/upload">New Bookmark</a></li>
+						<li><Link href="/upload">New Bookmark</Link></li>
 						<li>{ user ? <a>Logout</a> : <a href="/login">Login</a>}</li>
 					</ul>
-				</div> : <a href="/login" className="link link-secondary text-xl px-3">Login</a>
+				</div> : <Link href="/login" className="link link-secondary text-xl px-3">Login</Link>
 			}
 		</div>
 	)

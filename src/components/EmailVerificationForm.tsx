@@ -2,32 +2,19 @@
 
 import { 
 	useActionState,
-	useState
 } from "react"
 
-
-
-import { useRouter } from "next/navigation";
-
 import { 
-	Box,
 	Card,
-	Checkbox,
 	Container, 
-	Divider,
 	FormControl,
-	FormControlLabel,
 	FormLabel,
-	Link,
 	Stack,
-	SvgIcon,
 	TextField,
 	Typography
 } from "@mui/material";
 
 import { styled } from "@mui/material";
-
-import { GoogleIcon } from "./icons";
 
 const StyledCard = styled(Card)(({ theme }) => ({
 	display: 'flex',
@@ -78,8 +65,6 @@ interface EmailVerificationFormProps {
 }
 export const EmailVerificationForm = ({ action }: EmailVerificationFormProps) => {
 	const [state, formAction] = useActionState(action, { message: "" });
-
-	const router = useRouter();
 
 	return (
 		<form action={formAction}>

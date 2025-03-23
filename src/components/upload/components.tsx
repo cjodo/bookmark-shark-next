@@ -77,7 +77,7 @@ const NestedLinksComponent = () => {
   };
 
   // Handle folder title editing
-  const handleFolderTitleChange = (e: React.ChangeEvent<HTMLInputElement>, folderId: string) => {
+  const handleFolderTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewFolderTitle(e.target.value);
   };
 
@@ -105,7 +105,7 @@ const NestedLinksComponent = () => {
   };
 
   // Render folder or link recursively
-  const renderFolderOrLink = (item: Link | Folder, parentId?: string) => {
+  const renderFolderOrLink = (item: Link | Folder) => {
     if ('children' in item) {
       return (
         <div key={item.id} className="ml-4 mt-2">
@@ -114,7 +114,7 @@ const NestedLinksComponent = () => {
               <input
                 type="text"
                 value={newFolderTitle}
-                onChange={(e) => handleFolderTitleChange(e, item.id)}
+                onChange={(e) => handleFolderTitleChange(e)}
                 onBlur={() => handleFolderTitleBlur(item.id)}
                 onKeyPress={(e) => handleFolderTitleKeyPress(e, item.id)}
                 className="font-semibold text-lg border-b-2 border-gray-400 rounded-sm"
@@ -148,7 +148,7 @@ const NestedLinksComponent = () => {
             </button>
           </div>
           <div className="ml-6">
-            {item.children.map(child => renderFolderOrLink(child, item.id))}
+            {item.children.map(child => renderFolderOrLink(child))}
           </div>
         </div>
       );

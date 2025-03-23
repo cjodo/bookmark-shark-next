@@ -12,7 +12,7 @@ import {
 
 
 import { ExpiringTokenBucket } from "@/lib/rate-limit";
-import { getCurrentSession, invalidateUserSessions } from "@/lib/session";
+import { getCurrentSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 import { globalPostRateLimit } from "@/lib/request";
