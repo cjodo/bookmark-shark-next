@@ -8,8 +8,6 @@ export default async function Categories() {
 
 	return (
 		<>
-			<h1>Hello Categories</h1>
-
 			<CardContainer className="my-5">
 				{categories.map((category, i) => {
 					return (

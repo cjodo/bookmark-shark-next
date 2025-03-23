@@ -1,10 +1,13 @@
 import { Container } from "@mui/material"
 import { Typography } from "@mui/material"
 
+import Link from "next/link"
+
 import { CardContainer } from "@/components/card/CardContainer"
 import { CategoryCard } from "@/components/card/CategoryCard"
 
 import prisma from "@/lib/prisma"
+import { getCurrentSession } from "@/lib/session"
 
 export default async function Home() {
 	const categories = await prisma.category.findMany({
@@ -13,7 +16,6 @@ export default async function Home() {
 
 	return (
 		<main className="min-h-full flex flex-col items-center justify center bg-base-100">
-
 			<div className="hero min-h-[80vh]"
 				style={{
 					backgroundImage: `url(/hero-banner.png)`,
@@ -21,6 +23,7 @@ export default async function Home() {
 			>
 				<div className="hero-overlay bg-opacity-10"> </div>
 				<div className="hero-content">
+
 					<div className="max-w-end">
 						<h1 className="mb-5 text-7xl font-bold text-primary text-center">Bookmark Shark</h1>
 
@@ -38,12 +41,15 @@ export default async function Home() {
 			</div>
 
 			<Container maxWidth="xl" className="mb-5">
-				<Typography 
-					variant="h2"
-					className="text-5xl mt-5"
-				>
-					Categories
-				</Typography>
+				<div className="flex flex-col justify-around md:flex-row items-center justify-center">
+					<Typography 
+						variant="h2"
+						className="text-5xl mt-5"
+					>
+						Categories
+					</Typography>
+					<Link href="categories" className="text-xl link link-secondary link-hover h-full align-center">See All Categories →</Link>
+				</div>
 				<CardContainer className="mt-5 w-full">
 					{ categories.map((category) => (
 						<CategoryCard 

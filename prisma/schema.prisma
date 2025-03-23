@@ -13,15 +13,37 @@ datasource db {
 		url      = env("DATABASE_URL")
 }
 
+// TODO: Remove nullable on certain fields. They're there to make quick develpment possible.
+
 model User {
 	id 							Int	@id @default(autoincrement())
 		email 				String @unique
-		name 					String? 	@unique
+		username 			String? 	@unique
 		passwordHash 	String
 		createdAt 		DateTime @default(now())
+		googleId			String?
+		avatar				String?
+		recoveryCode	Bytes?
+
+		totpKey				Bytes?
+
+		emailVerified Boolean @default(false)
 
 		bookmarks 		Bookmark[]
 		starred				Star[]
+
+		session   Session? @relation("UserSession")
+
+		emailValidationRequest 	EmailVerificationRequest?	@relation("EmailValidation")
+		passwordResetSession		PasswordResetSession?			@relation("PasswordReset")
+}
+
+model Session {
+	id 				String @id 
+		userId		Int @unique
+		expiresAt	Int
+
+		user    User @relation("UserSession", fields: [userId], references: [id])
 }
 
 model Bookmark {
@@ -41,41 +63,66 @@ model Bookmark {
 
 model Star {
 	userId			Int
-	bookmarkId 	Int
-	createdAt 	DateTime @default(now())
+		bookmarkId 	Int
+		createdAt 	DateTime @default(now())
 
-	user  User 				@relation(fields: [userId], references: [id], onDelete: Cascade)
-	bookmark Bookmark @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
+		user  User 				@relation(fields: [userId], references: [id], onDelete: Cascade)
+		bookmark Bookmark @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
 
-	@@id([userId, bookmarkId])
+		@@id([userId, bookmarkId])
 }
 
 model BookmarkUrl {
 	id    			Int @id @default(autoincrement())
-	bookmarkId 	Int
-	url					String
+		bookmarkId 	Int
+		url					String
+		title				String @default("")
 
-	bookmark 		Bookmark @relation(fields: [bookmarkId], references: [id])
+		bookmark 		Bookmark @relation(fields: [bookmarkId], references: [id])
 
-	@@unique([bookmarkId, url])
+		@@unique([bookmarkId, url])
 }
 
 model Category {
 	id 						Int @id @default(autoincrement())
-	name 					String @unique
-	description 	String @default("")
-	feature_image String @default("https://placehold.co/600x400")
-	slug 					String @unique 
+		name 					String @unique
+		description 	String @default("")
+		feature_image String @default("https://placehold.co/600x400")
+		slug 					String @unique 
 
-	bookmarks BookmarkCategory[]
+		bookmarks BookmarkCategory[]
 }
 
 model BookmarkCategory {
 	bookmarkId Int
-	categoryId Int 
+		categoryId Int 
 
-	bookmark Bookmark @relation(fields: [bookmarkId], references: [id])
-	category Category @relation(fields: [categoryId], references: [id])
+		bookmark Bookmark @relation(fields: [bookmarkId], references: [id])
+		category Category @relation(fields: [categoryId], references: [id])
 
-	@@id([bookmarkId, categoryId])
+		@@id([bookmarkId, categoryId])
+}
+
+// verification and password reset
+
+model EmailVerificationRequest {
+	id 				String 	@id
+		userId		Int 	@unique	
+		email 		String 
+		code 			String
+		expiresAt	Int
+
+		user 			User	@relation("EmailValidation", fields: [userId], references: [id])
+}
+
+model PasswordResetSession {
+	id			String @id 
+		userId						Int	@unique
+		email							String
+		code 							String
+		expiresAt					Int
+		emailVerified 		Boolean @default(false)
+		twoFactorVerified	Boolean @default(false)
+
+		user		User @relation("PasswordReset", fields: [userId], references: [id])
 }

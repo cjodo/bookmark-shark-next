@@ -33,8 +33,10 @@ export default function RootLayout({
 			>
 				<AppRouterCacheProvider options={{ enableCssLayer: true }}>
 					<ThemeProvider theme={theme}>
-					<Header />
-					{children}
+						<Header />
+						<main className="h-full">
+							{children}
+						</main>
 						<Footer />
 					</ThemeProvider>
 				</AppRouterCacheProvider>

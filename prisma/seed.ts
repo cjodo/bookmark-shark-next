@@ -64,6 +64,7 @@ async function main() {
         urls: {
           create: Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () => ({
             url: faker.internet.url(),
+						title: faker.word.noun()
           })),
         },
       },
