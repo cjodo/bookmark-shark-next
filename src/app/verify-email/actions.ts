@@ -73,7 +73,7 @@ export async function verifyEmailAction(_prev: ActionResult,formData: FormData):
 	updateUserEmailAndSetEmailAsVerified(user.id, verificationRequest.email);
 	deleteEmailVerificationRequestCookie();
 
-	return redirect("/")
+	return redirect("/");
 }
 
 export async function resendEmailVerificationCodeAction(): Promise<ActionResult> {

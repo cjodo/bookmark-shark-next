@@ -16,6 +16,9 @@ export async function createUser(email:string, username:string, password:string)
 	const passwordHash = await hashPassword(password);
 	const recoveryCode = generateRandomRecoveryCode();
 	const encryptedRecoveryCode = encryptString(recoveryCode);
+
+	console.log({recoveryCode, encryptedRecoveryCode});
+
 	const newUser = await prisma.user.create({
 		data: {
 			email: email,

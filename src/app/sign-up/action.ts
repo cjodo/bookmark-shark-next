@@ -76,11 +76,14 @@ export async function SignUpAction(_prev: ActionState, formData: FormData): Prom
 
 	const user = await createUser(email, username, password);
 
+	if(user === null) {
+		throw new Error("unexpected error")
+	}
 	if(user?.id === undefined || user?.email === undefined) {
 		throw new Error("unexpected error")
 	}
 
-	const emailVerificationRequest = await createEmailVerificationRequest(user?.id, user?.email);
+	const emailVerificationRequest = await createEmailVerificationRequest(user.id, user.email);
 	sendVerificationEmail(emailVerificationRequest.email, emailVerificationRequest.code);
 	setEmailVerificationRequestCookie(emailVerificationRequest);
 
@@ -89,5 +92,5 @@ export async function SignUpAction(_prev: ActionState, formData: FormData): Prom
 
 	setSessionTokenCookie(sessionToken, session.expiresAt);
 
-	return redirect("/");
+	return redirect("/verify-email");
 }

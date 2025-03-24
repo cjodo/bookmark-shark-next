@@ -58,7 +58,7 @@ export async function createEmailVerificationRequest(userId: number, email: stri
 }
 
 export async function deleteUserEmailVerificationRequest(userId: number): Promise<void> {
-	await prisma.emailVerificationRequest.delete({ where: {userId: userId} })
+	await prisma.emailVerificationRequest.deleteMany({ where: {userId: userId} })
 }
 
 export function sendVerificationEmail(email: string, code: string): void {
