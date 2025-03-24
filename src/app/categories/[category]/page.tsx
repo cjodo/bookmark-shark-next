@@ -2,8 +2,7 @@ import prisma from "@/lib/prisma"
 
 import { Container } from "@mui/material"
 
-import { BookmarkCard } from "@/components/card/BookmarkCard"
-import { CardContainer } from "@/components/card/CardContainer"
+import { BookmarkGrid } from "@/components/BookmarkGrid"
 
 export default async function Page({ 
 	params,
@@ -33,19 +32,18 @@ export default async function Page({
 					}
 				}
 			}
+		},
+		include: {
+			user: true
 		}
 	})
 
 	console.log(categoryBookmarks)
 
 	return (
-			<Container maxWidth="lg" className="my-5">
-				<h1 className="text-4xl my-5">Category: { category?.name }</h1>
-				<CardContainer>
-					{ categoryBookmarks.map((bookmark, i) => (
-						<BookmarkCard key={i} bookmark={bookmark} />
-					)) }
-				</CardContainer>
-			</Container>
+		<Container maxWidth="lg" className="my-5">
+			<h1 className="text-4xl my-5">Category: { category?.name }</h1>
+			<BookmarkGrid bookmarks={categoryBookmarks}/> 
+		</Container>
 	)
 }

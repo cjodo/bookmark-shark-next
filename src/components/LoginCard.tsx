@@ -83,6 +83,10 @@ export const LoginCard = () => {
 	// const handleClose = () => {
 	// 	setOpen(false);
 	// };
+	//
+	const handleClickOpen = () => {
+		console.log("TODO FORGOT PASSWORD");
+	}
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		if (emailError || passwordError) {

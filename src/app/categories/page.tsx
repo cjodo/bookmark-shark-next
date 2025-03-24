@@ -1,20 +1,25 @@
 import prisma from "@/lib/prisma"
 
+
 import { CategoryCard } from "@/components/card/CategoryCard"
 import { CardContainer } from "@/components/card/CardContainer"
+import { Container } from "@mui/material"
 
 export default async function Categories() {
-	const categories = await prisma.category.findMany({ })
+	const categories = await prisma.category.findMany({ });
 
 	return (
 		<>
+			<Container maxWidth="md" className="p-5">
+				<h1 className="text-4xl">All Categories</h1>
+			</Container>
 			<CardContainer className="my-5">
 				{categories.map((category, i) => {
 					return (
 						<CategoryCard
 							key={i}
 							cardTitle={ category.name }
-							image={ category.feature_image }
+							image={ `/icons/category/${category.name.toLowerCase()}.webp` }
 							cardBody={ category.description }
 							route={ category.slug }
 						/>

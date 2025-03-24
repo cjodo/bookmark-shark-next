@@ -14,15 +14,17 @@ datasource db {
 }
 
 // TODO: Remove nullable on certain fields. They're there to make quick develpment possible.
+// fields will be marked REQ if needed in prod
 
 model User {
 	id 							Int	@id @default(autoincrement())
 		email 				String @unique
+		//Required
 		username 			String? 	@unique
 		passwordHash 	String
 		createdAt 		DateTime @default(now())
 		googleId			String?
-		avatar				String?
+		avatar				String? @default("/placeholder-avatar.png")
 		recoveryCode	Bytes?
 
 		totpKey				Bytes?

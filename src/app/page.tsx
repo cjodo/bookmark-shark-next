@@ -26,9 +26,9 @@ export default async function Home() {
 					<div className="max-w-end">
 						<h1 className="mb-5 text-7xl font-bold text-primary text-center">Bookmark Shark</h1>
 
-						<p className="mb-5 text-lg">
-							Bookmark Shark is a browser bookmark sharing platform, perfect for discovering and sharing entertainment, educational, and professional content.  
-							Easily share, rate, and download others&apos bookmarks in just one click!
+						<p className="mb-5 text-lg max-w-2xl">
+							Bookmark Shark is a link sharing platform, perfect for discovering and sharing entertainment, educational, and professional content.  
+							Easily share, save, and explore others' bookmarks in just one click!
 						</p>
 
 						<div className="mt-6 flex justify-center space-x-4">
@@ -55,6 +55,7 @@ export default async function Home() {
 							key={category.id} 
 							cardTitle={ category.name }
 							cardBody={ category.description }
+							image={ `/icons/category/${category.name.toLowerCase()}.webp` }
 							route={category.slug}
 						/>
 					))}

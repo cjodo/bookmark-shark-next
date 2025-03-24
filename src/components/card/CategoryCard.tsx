@@ -10,6 +10,7 @@ import {
 } from "@mui/material"
 
 import { Typography } from "@mui/material"
+import Link from "next/link";
 
 interface CategoryProps {
 	cardTitle: string
@@ -17,30 +18,35 @@ interface CategoryProps {
 	route: string
 
 	image?: string
+	attributionLink?: string
 }
 export const CategoryCard = ({ 
 	cardTitle,
 	image,
 	cardBody,
-	route
+	route,
+	attributionLink
 }: CategoryProps) => {
 	const router = useRouter();
 
 	return (
 		<Card 
+			raised
 			sx={{ 
 				maxWidth: 400, 
-				minWidth: 200, 
+				minWidth: 350, 
 				display: "flex", 
 				flexDirection: "column", 
-				justifyContent: "space-between"
+				justifyContent: "space-between",
+				padding: "0.5rem"
 			}} 
 			className="bg-neutral shadow-xl">
 			<CardMedia 
-				sx={{ height: 140 }}
+				sx={{ height: 250, width: 250, objectFit: "contain", margin: "0 auto"}}
 				image={ image }
 				title={ cardTitle }
 			/>
+				{ attributionLink && <Link className="link link-neutral" href={attributionLink}>Photo source</Link> }
 			<CardContent>
 				<Typography gutterBottom variant="h2" className="text-xl">
 					{ cardTitle }
@@ -55,7 +61,6 @@ export const CategoryCard = ({
 						router.push(`/categories/${route}`)
 					}}
 					className="btn btn-primary">Explore</button>
-				<button className="btn btn-outline">Learn More</button>
 			</CardActions>
 		</Card>
 	)
