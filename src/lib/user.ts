@@ -70,8 +70,8 @@ export async function getUserFromGoogleId(googleId: string): Promise<User | null
 	return user;
 }
 
-export function updateUserEmailAndSetEmailAsVerified(userId: number, email: string): void {
-	prisma.user.update({
+export async function updateUserEmailAndSetEmailAsVerified(userId: number, email: string): Promise<void> {
+	await prisma.user.update({
 		where: {
 			id: userId
 		},
@@ -80,4 +80,11 @@ export function updateUserEmailAndSetEmailAsVerified(userId: number, email: stri
 			emailVerified: true
 		}
 	})
+}
+
+export async function updateUser(update: Partial<User> | User, userId: number) {
+	prisma.user.update({
+		where: {id: userId},
+		data: update
+	});
 }

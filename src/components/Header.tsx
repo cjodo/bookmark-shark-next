@@ -6,7 +6,8 @@ import { getCurrentSession } from "@/lib/session"
 import { LogoutButton } from "./LogoutButton";
 
 export const Header = async () => {
-	const { user } = await getCurrentSession();
+	const { user, session } = await getCurrentSession();
+	console.log({ user, session })
 
 	return (
 		<div className="navbar bg-neutral text-base-content">
@@ -42,7 +43,7 @@ export const Header = async () => {
 							</Link>
 						</li>
 						<li><Link href="/upload">New Bookmark</Link></li>
-						<li>{ user ? <LogoutButton /> : <a href="/login">Login</a>}</li>
+						{ user ? <LogoutButton /> : <a href="/login">Login</a>}
 					</ul>
 				</div> : <Link href="/login" className="link link-secondary text-xl px-3">Login</Link>
 			}

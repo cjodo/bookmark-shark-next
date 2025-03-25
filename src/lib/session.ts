@@ -10,6 +10,7 @@ import type { User } from "@prisma/client";
 
 export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+	console.log("Generated sessionId for validation: ", sessionId)
 	const row = await prisma.session.findFirst({
 		where: {
 			id: sessionId
@@ -19,14 +20,19 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 		}
 	})
 
+	console.log("Found session row: ", row)
+
 	if (row === null) {
 		return { session: null, user: null };
 	}
 
+	const expirationTime = Date.now() + 1000 * 60 * 60 * 24 * 30; // 30 days
+	const expirationDate = new Date(expirationTime);
+
 	const session: Session = {
 		id: row.id,
 		userId: row.userId,
-		expiresAt: new Date(row.expiresAt * 1000)
+		expiresAt: expirationDate,
 	};
 
 	if (Date.now() >= session.expiresAt.getTime()) {
@@ -49,6 +55,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 export const getCurrentSession =  cache(async (): Promise<SessionValidationResult> => {
 	const cs = await cookies()
 	const token = cs.get("session")
+	console.log("Token from cookies: ", token)
 	if (token === null || token === undefined) {
 		return { session: null, user: null };
 	}
@@ -57,12 +64,12 @@ export const getCurrentSession =  cache(async (): Promise<SessionValidationResul
 	return result;
 });
 
-export function invalidateSession(sessionId: string): void {
-	prisma.session.delete({ where: { id: sessionId } })
+export async function invalidateSession(sessionId: string): Promise<void> {
+	await prisma.session.delete({ where: { id: sessionId } })
 }
 
-export function invalidateUserSessions(userId: number): void {
-	prisma.session.delete({ where: { userId: userId } });
+export async function invalidateUserSessions(userId: number): Promise<void> {
+	await prisma.session.delete({ where: { userId: userId } });
 }
 
 export async function setSessionTokenCookie(token: string, expiresAt: Date): Promise<void> {
@@ -77,6 +84,7 @@ export async function setSessionTokenCookie(token: string, expiresAt: Date): Pro
 }
 
 export async function deleteSessionTokenCookie(): Promise<void> {
+	console.log("deleting session cookie")
 	const cs = await cookies()
 	cs.set("session", "", {
 		httpOnly: true,
@@ -90,25 +98,39 @@ export async function deleteSessionTokenCookie(): Promise<void> {
 export function generateSessionToken(): string {
 	const tokenBytes = new Uint8Array(20);
 	crypto.getRandomValues(tokenBytes);
-	const token = encodeBase32(tokenBytes).toLowerCase();
+	const token = encodeBase32(tokenBytes);
 	return token;
 }
 
 export async function createSession(token: string, userId: number): Promise<Session> {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+	console.log("Generated sessionId: ", sessionId);
 
 	const session: Session = {
 		id: sessionId,
 		userId,
 		expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
 	};
-	await prisma.session.create({
+
+	const existingSession = await prisma.session.findFirst({
+		where: {
+			userId: userId
+		}
+	})
+
+	if(existingSession != null) {
+		await invalidateUserSessions(userId);
+	}
+
+	const res = await prisma.session.create({
 		data: {
 			id: sessionId,
 			userId: userId,
 			expiresAt: Math.floor(session.expiresAt.getTime() / 1000)
 		}
 	})
+
+	console.log("create: ", res)
 
 	return session;
 }

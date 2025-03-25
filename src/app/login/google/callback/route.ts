@@ -1,14 +1,14 @@
 import { generateSessionToken, createSession, setSessionTokenCookie } from "@/lib/session";
 import { google } from "@/lib/oauth";
 import { cookies } from "next/headers";
-import { createUserWithGoogle, getUserFromGoogleId } from "@/lib/user";
+import { createUserWithGoogle, getUserFromGoogleId, updateUserEmailAndSetEmailAsVerified } from "@/lib/user";
 import { ObjectParser } from "@pilcrowjs/object-parser";
 import { globalGetRateLimit } from "@/lib/request";
 
 import { decodeIdToken, type OAuth2Tokens } from "arctic";
+import { setEmailVerificationRequestCookie } from "@/lib/email-verification";
 
 export async function GET(request: Request): Promise<Response> {
-	console.log("Callback");
 	if (!globalGetRateLimit()) {
 		return new Response("Too many requests", {
 			status: 429
@@ -52,6 +52,7 @@ export async function GET(request: Request): Promise<Response> {
 	if (existingUser !== null) {
 		const sessionToken = generateSessionToken();
 		const session = await createSession(sessionToken, existingUser.id);
+		await updateUserEmailAndSetEmailAsVerified(existingUser.id, email);
 		setSessionTokenCookie(sessionToken, session.expiresAt);
 		return new Response(null, {
 			status: 302,
@@ -64,6 +65,8 @@ export async function GET(request: Request): Promise<Response> {
 	const user = await createUserWithGoogle(googleId, email, name);
 	const sessionToken = generateSessionToken();
 	const session = await createSession(sessionToken, user.id);
+
+	await updateUserEmailAndSetEmailAsVerified(user.id, email);
 
 	setSessionTokenCookie(sessionToken, session.expiresAt);
 	return new Response(null, {

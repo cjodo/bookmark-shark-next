@@ -43,7 +43,7 @@ model User {
 model Session {
 	id 				String @id 
 		userId		Int @unique
-		expiresAt	Int
+		expiresAt	BigInt
 
 		user    User @relation("UserSession", fields: [userId], references: [id])
 }
