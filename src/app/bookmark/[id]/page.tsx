@@ -38,7 +38,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 			<div className="grow">
 				<h1 className="text-4xl">{ bookmarkMeta?.name }</h1>
 				<p>Description: {bookmarkMeta?.description}</p>
-				<p>Author: {author?.name}</p>
+				<p>Author: {author?.username}</p>
 
 
 				<div className="flex flex-col items-center p-7">

@@ -45,20 +45,26 @@ export const StarContainer = ({ bookmarkId, userId }: StarContainerParams) => {
 	const unStar = async () => {
 		if (!userId) return;
 
+		setStarred(false); 
+		setAmount(prevAmount => (prevAmount ? prevAmount - 1 : 1)); 
+
 		const res = await fetch(`http://localhost:3000/api/unstar?bookmarkId=${bookmarkId}&userId=${userId}`, { method: "POST" });
-		if (res.ok) {
-			setStarred(false); // Update local state
-			setAmount(prevAmount => (prevAmount ? prevAmount - 1 : 0)); // Decrease the amount
+		if (!res.ok) {
+			setStarred(true); 
+			setAmount(prevAmount => (prevAmount ? prevAmount + 1 : 1)); 
 		}
 	};
 
 	const star = async () => {
 		if (!userId) return;
 
+		setStarred(true); 
+		setAmount(prevAmount => (prevAmount ? prevAmount + 1 : 1)); 
+
 		const res = await fetch(`http://localhost:3000/api/star?bookmarkId=${bookmarkId}&userId=${userId}`, { method: "POST" });
-		if (res.ok) {
-			setStarred(true); // Update local state
-			setAmount(prevAmount => (prevAmount ? prevAmount + 1 : 1)); // Increase the amount
+		if (!res.ok) {
+			setStarred(false); 
+			setAmount(prevAmount => (prevAmount ? prevAmount - 1 : 1)); 
 		}
 	};
 

@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { Avatar, Typography } from "@mui/material";
 
 import { BookmarkGrid } from "@/components/BookmarkGrid";
+import { BookmarkWithAuthor } from "@/index";
+import { AcceleratePromise } from "@prisma/extension-accelerate";
 
 export default async function Profile({ params }: {params: Promise<{ id: string }>}) {
 	const userSlug = await params
@@ -22,7 +24,7 @@ export default async function Profile({ params }: {params: Promise<{ id: string 
 			userId: currentUser.id
 		},
 		include: { user: true }
-	})
+	}) as unknown as AcceleratePromise<BookmarkWithAuthor[]>
 
 	let avatar: string;
 
@@ -44,7 +46,7 @@ export default async function Profile({ params }: {params: Promise<{ id: string 
 
 			<div className="w-full max-w-[1440px] mt-6 space-y-4">
 				<Typography variant="h5" className="font-bold text-3xl">Users Bookmarks</Typography>
-				<BookmarkGrid bookmarks={bookmarks} />
+				<BookmarkGrid bookmarks={bookmarks} userId={parseInt(userSlug.id)} />
 			</div>
 		</div>
 	);

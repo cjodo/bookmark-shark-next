@@ -5,6 +5,8 @@ import { CategoryCard } from "@/components/card/CategoryCard"
 import { CardContainer } from "@/components/card/CardContainer"
 import { Container } from "@mui/material"
 
+import { Paginate } from "@/components/Paginate"
+
 export default async function Categories() {
 	const categories = await prisma.category.findMany({ });
 
@@ -26,6 +28,7 @@ export default async function Categories() {
 					)
 				})}
 			</CardContainer>
+			<Paginate maxPages={10} />
 		</>
 	)
 }

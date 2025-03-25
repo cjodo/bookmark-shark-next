@@ -1,17 +1,17 @@
 "use client"
 
-import { Prisma } from "@prisma/client"
 import { AcceleratePromise } from "@prisma/extension-accelerate"
 import { useEffect, useState } from "react"
 
+import { Prisma } from "@prisma/client"
+
 import { BookmarkCard } from "./card/BookmarkCard"
 
-type BookmarkWithAuthor = Prisma.BookmarkGetPayload<{
-	include: { user: true }
-}>
+import type { BookmarkWithAuthor } from ".."
+
 
 interface BookmarkGridProps {
-	bookmarks: AcceleratePromise<BookmarkWithAuthor[]>
+		bookmarks: AcceleratePromise<Prisma.BookmarkGetPayload<{ include: { user: true } }>[]>
 	userId: number | undefined
 }
 export const BookmarkGrid = ({ bookmarks, userId }: BookmarkGridProps) => {
