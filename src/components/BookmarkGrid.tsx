@@ -1,8 +1,8 @@
 "use client"
 
-import { Prisma, Bookmark } from "@prisma/client"
+import { Prisma } from "@prisma/client"
 import { AcceleratePromise } from "@prisma/extension-accelerate"
-import { ReactNode, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 import { BookmarkCard } from "./card/BookmarkCard"
 
@@ -12,13 +12,13 @@ type BookmarkWithAuthor = Prisma.BookmarkGetPayload<{
 
 interface BookmarkGridProps {
 	bookmarks: AcceleratePromise<BookmarkWithAuthor[]>
+	userId: number | undefined
 }
-export const BookmarkGrid = ({ bookmarks }: BookmarkGridProps) => {
+export const BookmarkGrid = ({ bookmarks, userId }: BookmarkGridProps) => {
 	const [loading, setLoading] = useState(true);
 	const [resolvedBookmarks, setResolvedBookmarks] = useState<BookmarkWithAuthor[]>([]);
 
 	useEffect(() => {
-		console.log(bookmarks)
 		if(Array.isArray(bookmarks)) {
 			setResolvedBookmarks(bookmarks);
 			setLoading(false);
@@ -40,7 +40,7 @@ export const BookmarkGrid = ({ bookmarks }: BookmarkGridProps) => {
 	return (
 		<div className="w-full max-w-[1440px] mt-6 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
 			{resolvedBookmarks.map((bookmark, key) => (
-				<BookmarkCard bookmark={bookmark} key={key} author={bookmark.user} />
+				<BookmarkCard bookmark={bookmark} key={key} author={bookmark.user} userId={userId} />
 			))}
 		</div>
 	)

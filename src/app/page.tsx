@@ -28,7 +28,7 @@ export default async function Home() {
 
 						<p className="mb-5 text-lg max-w-2xl">
 							Bookmark Shark is a link sharing platform, perfect for discovering and sharing entertainment, educational, and professional content.  
-							Easily share, save, and explore others' bookmarks in just one click!
+							Easily share, save, and explore others&apos; bookmarks in just one click!
 						</p>
 
 						<div className="mt-6 flex justify-center space-x-4">

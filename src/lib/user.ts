@@ -83,8 +83,16 @@ export async function updateUserEmailAndSetEmailAsVerified(userId: number, email
 }
 
 export async function updateUser(update: Partial<User> | User, userId: number) {
-	prisma.user.update({
+	if(update === null) {
+		return 
+	}
+
+	const updated = await prisma.user.update({
 		where: {id: userId},
 		data: update
 	});
+
+	console.log(updated);
+
+	return updated;
 }

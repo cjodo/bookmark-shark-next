@@ -10,7 +10,6 @@ import type { User } from "@prisma/client";
 
 export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	console.log("Generated sessionId for validation: ", sessionId)
 	const row = await prisma.session.findFirst({
 		where: {
 			id: sessionId
@@ -19,8 +18,6 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 			user: true
 		}
 	})
-
-	console.log("Found session row: ", row)
 
 	if (row === null) {
 		return { session: null, user: null };
@@ -55,7 +52,6 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 export const getCurrentSession =  cache(async (): Promise<SessionValidationResult> => {
 	const cs = await cookies()
 	const token = cs.get("session")
-	console.log("Token from cookies: ", token)
 	if (token === null || token === undefined) {
 		return { session: null, user: null };
 	}

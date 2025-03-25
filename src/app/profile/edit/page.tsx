@@ -10,6 +10,6 @@ export default async function Page() {
 	}
 
 	return (
-		<UpdateUserForm action={updateProfileAction} user={user} />
+		<UpdateUserForm action={ updateProfileAction } user={user} />
 	)
 }

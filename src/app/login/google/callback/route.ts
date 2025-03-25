@@ -6,7 +6,6 @@ import { ObjectParser } from "@pilcrowjs/object-parser";
 import { globalGetRateLimit } from "@/lib/request";
 
 import { decodeIdToken, type OAuth2Tokens } from "arctic";
-import { setEmailVerificationRequestCookie } from "@/lib/email-verification";
 
 export async function GET(request: Request): Promise<Response> {
 	if (!globalGetRateLimit()) {

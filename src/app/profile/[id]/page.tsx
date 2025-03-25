@@ -11,13 +11,11 @@ export default async function Profile({ params }: {params: Promise<{ id: string 
 		where: {
 			id: parseInt(userSlug.id)
 		}
-	} ) 
+	}) 
 
 	if (!currentUser?.id) {
 		return <h1 className="text-5xl">User Not Found</h1>
 	}
-
-	console.log(currentUser.username)
 
 	const bookmarks = await prisma.bookmark.findMany({
 		where: {
@@ -31,7 +29,7 @@ export default async function Profile({ params }: {params: Promise<{ id: string 
 	if (currentUser.avatar == null || currentUser.avatar == undefined) {
 		avatar = "/placeholder-avatar.png"
 	} else {
-		avatar = currentUser.avatar;
+		avatar = "/avatars/" + currentUser.avatar;
 	}
 
 	return (
