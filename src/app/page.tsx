@@ -3,15 +3,37 @@ import { Typography } from "@mui/material"
 
 import Link from "next/link"
 
+import { BookmarkGrid } from "@/components/BookmarkGrid"
+
 import { CardContainer } from "@/components/card/CardContainer"
 import { CategoryCard } from "@/components/card/CategoryCard"
 
 import prisma from "@/lib/prisma"
+import { getCurrentSession } from "@/lib/session"
+import { AcceleratePromise } from "@prisma/extension-accelerate"
+import { BookmarkWithAuthor } from ".."
 
 export default async function Home() {
+	const { user } = await getCurrentSession() || undefined;
+
 	const categories = await prisma.category.findMany({
 		take: 3
 	})
+
+	const popular = await prisma.bookmark.findMany({
+		include: {
+			user: true,
+			_count: {
+				select: { stars: true }
+			}
+		},
+		orderBy: {
+			stars: {
+				_count: 'desc'
+			}
+		},
+		take: 10,
+	}) as unknown as AcceleratePromise<BookmarkWithAuthor[]>
 
 	return (
 		<main className="min-h-full flex flex-col items-center justify center bg-base-100">
@@ -60,6 +82,15 @@ export default async function Home() {
 						/>
 					))}
 				</CardContainer>
+				<div className="flex flex-col justify-around items-center justify-center my-4">
+					<Typography 
+						variant="h2"
+						className="text-5xl mt-5"
+					>
+						Some Popular Bookmarks
+					</Typography>
+					<BookmarkGrid bookmarks={popular} userId={user?.id} />
+				</div>
 			</Container>
 
 		</main>

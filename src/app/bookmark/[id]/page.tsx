@@ -6,9 +6,14 @@ import {
 	ListItem
 } from "@mui/material"
 
+import { StarContainer } from "@/components/StarContainer"
+import { getCurrentSession } from "@/lib/session"
+
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params
+
+	const { user } = await getCurrentSession();
 
 	const bookmarkMeta = await prisma.bookmark.findFirst({
 		where: {
@@ -33,10 +38,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 	})
 
 	return (
-
-	<Container maxWidth="lg" className="flex flex-col min-h-screen">
+		<Container maxWidth="lg" className="flex flex-col min-h-screen">
 			<div className="grow">
-				<h1 className="text-4xl">{ bookmarkMeta?.name }</h1>
+				<h1 className="text-4xl">{ bookmarkMeta?.name } <StarContainer userId={ user.id } bookmarkId={parseInt(id)}/> </h1>
 				<p>Description: {bookmarkMeta?.description}</p>
 				<p>Author: {author?.username}</p>
 
@@ -49,7 +53,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 					</List>
 				</div>
 			</div>
-	</Container>
+		</Container>
 
 	)
 }

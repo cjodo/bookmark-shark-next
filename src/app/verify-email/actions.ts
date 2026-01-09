@@ -10,6 +10,7 @@ import {
 	setEmailVerificationRequestCookie
 } from "@/lib/email-verification";
 
+import { ActionResult } from "@/index";
 
 import { ExpiringTokenBucket } from "@/lib/rate-limit";
 import { getCurrentSession } from "@/lib/session";
@@ -22,9 +23,6 @@ import { updateUserEmailAndSetEmailAsVerified } from "@/lib/user";
 
 const bucket = new ExpiringTokenBucket<number>(5, 60*30);
 
-interface ActionResult {
-	message: string;
-}
 export async function verifyEmailAction(_prev: ActionResult,formData: FormData): Promise<ActionResult> {
 	if(!globalPostRateLimit) {
 		return { message: "Too many requests" }

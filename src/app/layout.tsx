@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@mui/material";
+import { NotificationProvider } from "@/contexts/NotificationContext";
 import "./globals.css";
 
 import { Roboto } from "next/font/google";
@@ -33,11 +34,13 @@ export default function RootLayout({
 			>
 				<AppRouterCacheProvider options={{ enableCssLayer: true }}>
 					<ThemeProvider theme={theme}>
-						<Header />
-						<main className="h-full">
-							{children}
-						</main>
-						<Footer />
+						<NotificationProvider>
+							<Header />
+							<main className="h-full">
+								{children}
+							</main>
+							<Footer />
+						</NotificationProvider>
 					</ThemeProvider>
 				</AppRouterCacheProvider>
 			</body>

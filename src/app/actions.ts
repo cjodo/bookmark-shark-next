@@ -4,10 +4,8 @@ import { globalPostRateLimit } from "@/lib/request";
 import { deleteSessionTokenCookie, getCurrentSession, invalidateSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
-//TODO: have a types.d.ts for less repetitive type def
-interface ActionResult {
-	message: string
-}
+import { ActionResult } from "..";
+
 export async function logoutAction(): Promise<ActionResult> {
 	if(!globalPostRateLimit())  {
 		return {

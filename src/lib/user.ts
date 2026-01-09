@@ -5,12 +5,23 @@ import { hashPassword } from "./password";
 import { encryptString } from "./encryption";
 
 import { generateRandomRecoveryCode } from "./utils";
+import { profile } from "console";
 
 
 export function verifyUsernameInput(username: string) {
 	return username.length > 3 && username.length < 32 && username.trim() === username;
 }
 
+export async function getUserFromEmail(email: string): Promise<Partial<User> | null> {
+	const user = await prisma.user.findMany({ 
+		where: {
+			email: email
+		}
+	})
+
+	// email is unique but findMany won't throw an error if it's not found
+	return user[0];
+}
 
 export async function createUser(email:string, username:string, password:string): Promise<Partial<User> | null> {
 	const passwordHash = await hashPassword(password);
@@ -63,6 +74,21 @@ export async function createUserWithGoogle(
 	}
 
 	return user
+}
+
+export async function getUserPasswordHash(userId: number): Promise<string>{
+	const passwordHash = await prisma.user.findFirstOrThrow({
+		where: {
+			id: userId,
+		},
+		select: { passwordHash: true }
+	});
+
+	if(passwordHash === null) {
+		return "";
+	}
+
+	return passwordHash.passwordHash 
 }
 
 export async function getUserFromGoogleId(googleId: string): Promise<User | null> {

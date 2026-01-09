@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useActionState } from "react";
+
 import { 
 	Box,
 	Card,
@@ -66,11 +68,20 @@ const LoginContainer = styled(Stack)(({ theme }) => ({
 }));
 
 
-export const LoginCard = () => {
+const initialState = {
+	message: ""
+}
+
+interface LoginCardProps {
+	action: (prevState: {message: string }, formData: FormData) => Promise<{ message: string }>;
+}
+export const LoginCard = ({ action }: LoginCardProps) => {
 	const [emailError, setEmailError] = useState(false);
 	const [emailErrorMessage, setEmailErrorMessage] = useState('');
 	const [passwordError, setPasswordError] = useState(false);
 	const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+
+	const [state, formAction] = useActionState(action, initialState);
 
 	const router = useRouter();
 
@@ -93,11 +104,6 @@ export const LoginCard = () => {
 			event.preventDefault();
 			return;
 		}
-		const data = new FormData(event.currentTarget);
-		console.log({
-			email: data.get('email'),
-			password: data.get('password'),
-		});
 	};
 
 	const validateInputs = () => {
@@ -127,6 +133,8 @@ export const LoginCard = () => {
 		return isValid;
 	};
 
+
+
 	return (
 		<LoginContainer direction="column" justifyContent="space-between">
 			<Container maxWidth="lg" className="flex flex-col items-center justify-center min-h-screen">
@@ -139,17 +147,11 @@ export const LoginCard = () => {
 						>
 							Sign in
 						</Typography>
-						<Box
-							component="form"
-							onSubmit={handleSubmit}
-							noValidate
-							sx={{
-								display: 'flex',
-								flexDirection: 'column',
-								width: '100%',
-								gap: 2,
-							}}
-						>
+						<form 
+						action={formAction} 
+						// onSubmit={validateInputs} 
+						className="flex flex-col w-full gap-2"
+					>
 							<FormControl>
 								<FormLabel htmlFor="email">Email</FormLabel>
 								<TextField
@@ -190,6 +192,7 @@ export const LoginCard = () => {
 								label="Remember me"
 							/>
 							{ /* <ForgotPassword open={open} handleClose={handleClose} /> */ } 
+							{ state.message && <p className="text-red-600">{state.message}</p> }
 							<button
 								type="submit"
 								onClick={validateInputs}
@@ -206,7 +209,7 @@ export const LoginCard = () => {
 							>
 								Forgot your password?
 							</Link>
-						</Box>
+						</form>
 						<Divider>or</Divider>
 						<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
 							<button

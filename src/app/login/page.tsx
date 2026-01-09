@@ -1,7 +1,11 @@
+"use server"
+
 import { redirect } from "next/navigation";
 
 import { globalGetRateLimit } from "@/lib/request"
 import { getCurrentSession } from "@/lib/session";
+
+import { loginAction } from "./actions";
 
 import { LoginCard } from "@/components/LoginCard";
 
@@ -18,10 +22,9 @@ export default async function Page() {
 		redirect("/")
 	}
 
-
 	return (
 		<>
-			<LoginCard />
+			<LoginCard action={loginAction} />
 		</>
 	)
 }

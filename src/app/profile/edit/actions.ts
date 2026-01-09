@@ -5,6 +5,8 @@ import path from "path";
 import { updateUser } from "@/lib/user";
 import { User } from "@prisma/client";
 
+import { ActionResult } from "@/index";
+
 const saveAvatar = async (avatar: File, userId: number): Promise<string> => {
   const uploadDir = path.join(process.cwd(), "public/avatars");
 
@@ -25,9 +27,6 @@ const saveAvatar = async (avatar: File, userId: number): Promise<string> => {
   return fileName;
 };
 
-interface ActionResult {
-	message: string;
-}
 export async function updateProfileAction(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
 	const username = formData.get("username") as string | null;
 	const id = formData.get("id") as string | null;

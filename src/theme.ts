@@ -5,7 +5,11 @@ import { createTheme } from "@mui/material";
 const theme = createTheme({
 	typography: {
 		fontFamily: 'var(--font-roboto)'
-		
+	},
+	palette: {
+		secondary: {
+			main: "#CE93D8"
+		}
 	},
 	cssVariables: true,
 	components: {

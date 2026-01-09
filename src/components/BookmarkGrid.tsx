@@ -11,7 +11,7 @@ import type { BookmarkWithAuthor } from ".."
 
 
 interface BookmarkGridProps {
-		bookmarks: AcceleratePromise<Prisma.BookmarkGetPayload<{ include: { user: true } }>[]>
+	bookmarks: AcceleratePromise<Prisma.BookmarkGetPayload<{ include: { user: true } }>[]>
 	userId: number | undefined
 }
 export const BookmarkGrid = ({ bookmarks, userId }: BookmarkGridProps) => {
@@ -40,7 +40,11 @@ export const BookmarkGrid = ({ bookmarks, userId }: BookmarkGridProps) => {
 	return (
 		<div className="w-full max-w-[1440px] mt-6 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
 			{resolvedBookmarks.map((bookmark, key) => (
-				<BookmarkCard bookmark={bookmark} key={key} author={bookmark.user} userId={userId} />
+				<BookmarkCard 
+					bookmark={bookmark} 
+					key={key} 
+					author={bookmark.user} 
+					userId={userId} />
 			))}
 		</div>
 	)

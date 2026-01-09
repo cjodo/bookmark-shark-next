@@ -1,7 +1,8 @@
 "use client"
 
 import { Star, StarBorder } from "@mui/icons-material"
-import { useEffect, useState } from "react";
+import { useEffect, useState, cache } from "react";
+import { useNotification } from "@/contexts/NotificationContext";
 
 interface StarContainerParams {
 	bookmarkId: number
@@ -11,16 +12,18 @@ interface StarContainerParams {
 export const StarContainer = ({ bookmarkId, userId }: StarContainerParams) => {
 	const [amount, setAmount] = useState<number | null>(null);
 	const [starred, setStarred] = useState(false);
-	const[loggedIn, setLoggedIn] = useState(false);
+	const [loggedIn, setLoggedIn] = useState(false);
+
+	const { notify } = useNotification();
 
 	useEffect(() => {
 		// If userId exists, mark as logged in
-		if (userId !== null) {
+		if (userId) {
 			setLoggedIn(true);
 		}
 
 		// Function to fetch the star count and check if the user has starred
-		const fetchStarData = async () => {
+		const fetchStarData = cache(async () => {
 			try {
 				const res = await fetch(`/api/starcount?bookmarkId=${bookmarkId}&userId=${userId}`);
 				const data = await res.json();
@@ -35,7 +38,7 @@ export const StarContainer = ({ bookmarkId, userId }: StarContainerParams) => {
 			} catch (error) {
 				console.error("Error fetching star data:", error);
 			}
-		};
+		});
 
 		if (userId !== null) {
 			fetchStarData();
@@ -63,6 +66,7 @@ export const StarContainer = ({ bookmarkId, userId }: StarContainerParams) => {
 
 		const res = await fetch(`http://localhost:3000/api/star?bookmarkId=${bookmarkId}&userId=${userId}`, { method: "POST" });
 		if (!res.ok) {
+			notify(`Error starring bookmark: ${res.status === 500 ? "Unknown Error Occured" : "Unauthorized"}`, "error");
 			setStarred(false); 
 			setAmount(prevAmount => (prevAmount ? prevAmount - 1 : 1)); 
 		}

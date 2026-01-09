@@ -186,7 +186,6 @@ const NestedLinksComponent = () => {
         </button>
       </div>
 
-      {/* Link Input Form */}
       {showLinkInput && (
         <div className="mb-4 p-4 border border-gray-300 rounded">
           <div className="mb-2">
